@@ -64,3 +64,17 @@ static_resources:
                 protocol: TCP
                 address: web_service
                 port_value: 80
+  - name: customer_api
+    connect_timeout: 5s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: customer_api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                protocol: TCP
+                address: customer_api
+                port_value: 3030

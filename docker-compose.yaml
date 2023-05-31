@@ -3,14 +3,20 @@ services:
     image: envoyproxy/envoy:dev
     volumes:
     - ${PWD}/docker/envoy.yaml:/etc/envoy.yaml 
-    - ${PWD}/target/wasm32-unknown-unknown/release/envoy_filter_customer_lookup.wasm:/lib/envoy_filter_customer_lookup.wasm
+    - ${PWD}filter/target/wasm32-unknown-unknown/release/envoy_filter_customer_lookup.wasm:/lib/envoy_filter_customer_lookup.wasm
     depends_on:
     - web_service
+    - customer_api
     ports:
     - "8000:8000"
-    command: /usr/local/bin/envoy -c /etc/envoy.yaml --service-cluster proxy -l info
+    command: /usr/local/bin/envoy -c /etc/envoy.yaml --service-cluster proxy -l debug
 
   web_service:
     image: ealen/echo-server:0.7.0
     ports:
       - 80:80
+
+  customer_api:
+    build: ./customer-api
+    ports:
+      - 3030:3030
